@@ -58,7 +58,7 @@ The entire workflow, from data preprocessing and model training to compression a
 
 ### Prerequisites
 
-*   Python 3.x
+*   Python 3.14.2
 *   PyTorch
 *   NumPy
 *   Pandas
