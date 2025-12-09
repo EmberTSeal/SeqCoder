@@ -32,10 +32,23 @@ The deep learning model, `ConvolutionalAutoEncoder1D`, is built with PyTorch and
 
 ## Results
 
+### Training Setup
+The model was trained on a subset of the prokaryotic DNA corpus <b>AeCa, HaHi, WaMe, EsCo</b> with the following training setup:
+
+- **Dataset:** Prokaryotic genomes from DNACorpus 
+- **Parameters:** `P=3, K=1280`
+- **Loss function:** MSE loss
+- **Iterations:** `10000 training and 200 eval iterations`
+- **Optimizer:** NAdam
+- **Hardware:** GPU-accelerated (NVIDIA Tesla T4 x 2, 16 GB GDDR6), 30 GB RAM, Intel Xeon 2-2.20 GHz
+- **Evaluation metrics:** Base-level reconstruction accuracy, compression ratio
+
+The trained model can be found [here](SeqCoder_p3_model.pth).
+
 ### Compression Ratio
 
-The model was trained on a subset of the prokaryotic DNA corpus <b>AeCa, HaHi, WaMe, EsCo</b> with the parameters `P=3, K=1280, training iterations = 10000` and evaluated on both seen (train) and unseen (test) genomes. The trained model can be found [here](SeqCoder_p3_model.pth). The two-stage compression process achieves perfect, lossless reconstruction (100% accuracy) for all files.
-
+The model is evaluated on both seen (train) and unseen (test) genomes.
+The two-stage compression process achieves perfect, lossless reconstruction (100% accuracy) for all files.
 The overall compression ratio (total compressed size / original size) is detailed below.
 
 #### Train Set Results
