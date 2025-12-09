@@ -4,7 +4,7 @@ SeqCoder is a novel lossless compressor for prokaryotic genome sequences. It lev
 
 The core of SeqCoder is a 1D Convolutional Autoencoder with Self-Attention blocks designed specifically for sequential genomic data.
 
-## How It Works
+## Methodology
 
 The compression process is a two-stage pipeline designed for lossless reconstruction:
 
@@ -32,25 +32,45 @@ The deep learning model, `ConvolutionalAutoEncoder1D`, is built with PyTorch and
 
 ## Results
 
-The model was trained on a subset of the prokaryotic DNA corpus and evaluated on both seen (train) and unseen (test) genomes. The two-stage compression process achieves perfect, lossless reconstruction (100% accuracy) for all files.
+### Compression Ratio
+
+The model was trained on a subset of the prokaryotic DNA corpus <b>AeCa, HaHi, WaMe, EsCo</b> with the parameters `P=3, K=1280, training iterations = 10000` and evaluated on both seen (train) and unseen (test) genomes. The trained model can be found [here](SeqCoder_p3_model.pth). The two-stage compression process achieves perfect, lossless reconstruction (100% accuracy) for all files.
 
 The overall compression ratio (total compressed size / original size) is detailed below.
 
-### Train Set Results
+#### Train Set Results
 | file | Original Size (bytes) | Compressed Size (bytes) | Compression Ratio |
 |:-----|----------------------:|------------------------:|------------------:|
-| AeCa |               1591049 |                  735252 |          0.462118 |
-| EsCo |               4641652 |                 2000302 |          0.430946 |
-| HaHi |               3890005 |                 1754356 |          0.450991 |
-| WaMe |               9144432 |                 4158044 |          0.454708 |
+| AeCa |               1591049 |                  710586 |          0.446615 |
+| EsCo |               4641652 |                 2016912 |          0.434525 |
+| HaHi |               3890005 |                 1682054 |          0.432404 |
+| WaMe |               9144432 |                 3962454 |          0.433319 |
 
-### Test Set Results
+#### Test Set Results
 | file | Original Size (bytes) | Compressed Size (bytes) | Compression Ratio |
 |:-----|----------------------:|------------------------:|------------------:|
-| AgPh |                 43970 |                   20727 |          0.471390 |
-| BuEb |                 18940 |                    9233 |          0.487487 |
-| HePy |               1667825 |                  753662 |          0.451883 |
-| YeMi |                 73689 |                   34620 |          0.469812 |
+| AgPh |                 43970 |                   21019 |          0.478030 |
+| BuEb |                 18940 |                    9288 |          0.490391 |
+| HePy |               1667825 |                  736906 |          0.441837 |
+| YeMi |                 73689 |                   34118 |          0.463000 |
+
+![Sizes](https://github.com/EmberTSeal/SeqCoder/blob/main/Images/compress_vs_orig_sizes.png)
+
+### Compression & Decompression Time
+
+![Testing Time](https://github.com/EmberTSeal/SeqCoder/blob/main/Images/testing_times.png)
+
+### Loss-Accuracy Curves
+
+#### Loss
+
+![Loss Graphs](https://github.com/EmberTSeal/SeqCoder/blob/main/Images/training_loss_graphs.png)
+
+#### Accuracy
+
+![Loss Graphs](https://github.com/EmberTSeal/SeqCoder/blob/main/Images/training_accuracy_graphs.png)
+
+
 
 ## Usage
 
@@ -58,7 +78,7 @@ The entire workflow, from data preprocessing and model training to compression a
 
 ### Prerequisites
 
-*   Python 3.14.2
+*   Python 3.11
 *   PyTorch
 *   NumPy
 *   Pandas
