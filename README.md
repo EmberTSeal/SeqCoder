@@ -36,7 +36,7 @@ The deep learning model, `ConvolutionalAutoEncoder1D`, is built with PyTorch and
 The model was trained on a subset of the prokaryotic DNA corpus <b>AeCa, HaHi, WaMe, EsCo</b> with the following training setup:
 
 - **Dataset:** Prokaryotic genomes from DNACorpus 
-- **Parameters:** `P=3, K=1280`
+- **Parameters:** `P=1, K=1280`
 - **Loss function:** MSE loss
 - **Iterations:** `10000 training and 200 eval iterations`
 - **Optimizer:** NAdam
@@ -52,20 +52,24 @@ The two-stage compression process achieves perfect, lossless reconstruction (100
 The overall compression ratio `(total compressed size / original size)` is detailed below.
 
 #### Train Set Results
+
 | file | Original Size (bytes) | Compressed Size (bytes) | Compression Ratio |
 |:-----|----------------------:|------------------------:|------------------:|
-| AeCa |               1591049 |                  710586 |          0.446615 |
-| EsCo |               4641652 |                 2016912 |          0.434525 |
-| HaHi |               3890005 |                 1682054 |          0.432404 |
-| WaMe |               9144432 |                 3962454 |          0.433319 |
+| AeCa |               1591049 |                 579831 |          0.364433 |
+| EsCo |               4641652 |                1670308 |          0.359852 |
+| HaHi |               3890005 |                1390251 |          0.357391 |
+| WaMe |               9144432 |                3313535 |          0.362355 |
 
 #### Test Set Results
+
 | file | Original Size (bytes) | Compressed Size (bytes) | Compression Ratio |
 |:-----|----------------------:|------------------------:|------------------:|
-| AgPh |                 43970 |                   21019 |          0.478030 |
-| BuEb |                 18940 |                    9288 |          0.490391 |
-| HePy |               1667825 |                  736906 |          0.441837 |
-| YeMi |                 73689 |                   34118 |          0.463000 |
+| AgPh |                 43970 |                  17314 |          0.393768 |
+| BuEb |                 18940 |                   7719 |          0.407550 |
+| HePy |               1667825 |                 603626 |          0.361924 |
+| YeMi |                 73689 |                  27493 |          0.373095 |
+
+
 
 ![Sizes](https://github.com/EmberTSeal/SeqCoder/blob/main/Images/compress_vs_orig_sizes.png)
 
