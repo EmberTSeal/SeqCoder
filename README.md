@@ -1,6 +1,6 @@
 # SeqCoder 🧬
 
-SeqCoder is a novel lossless compressor for prokaryotic genome sequences. It leverages a deep learning autoencoder combined with residual encoding to achieve high compression ratios while ensuring perfect reconstruction of the original data.
+SeqCoder is a fast lossless compressor for prokaryotic genome sequences. It leverages a deep learning autoencoder combined with residual encoding to achieve high compression ratios while ensuring perfect reconstruction of the original data.
 
 The core of SeqCoder is a 1D Convolutional Autoencoder with Self-Attention blocks designed specifically for sequential genomic data.
 
@@ -10,14 +10,14 @@ The compression process is a two-stage pipeline designed for lossless reconstruc
 
 1.  **Stage 1: Autoencoder Compression (Lossy)**
     *   The input DNA sequence is divided into chunks.
-    *   A 1D Convolutional Autoencoder's encoder compresses each chunk into a compact latent representation (float32).
+    *   A 1D Convolutional Autoencoder's encoder compresses each chunk into a compact latent representation (float16).
     *   This latent representation is then quantized to 8-bit integers (`int8`) to significantly reduce its size.
-    *   Finally, the `int8` latent data is further compressed losslessly using the Blosc library with the Zstandard (zstd) codec.
+    *   Finally, the `int8` latent data is further compressed losslessly using the Zstandard (zstd) codec.
 
 2.  **Stage 2: Residual Encoding (Lossless Correction)**
     *   The quantized latent data from Stage 1 is passed through the autoencoder's decoder to produce a reconstructed sequence. This reconstruction is an approximation of the original.
     *   The differences (residuals) between the original sequence and the reconstructed sequence are identified.
-    *   The positions and original base values of these mismatches are efficiently encoded using a combination of delta encoding and VarInt encoding.
+    *   The positions and original base values of these mismatches are efficiently encoded using a predictive encoding format.
     *   This compact residual data is then compressed using Zstandard.
 
 The final compressed file consists of the compressed latent representation from Stage 1 and the compressed residuals from Stage 2. During decompression, the autoencoder first generates the approximate sequence, which is then corrected using the residual data to achieve a bit-for-bit identical, lossless reconstruction of the original genome.
@@ -33,12 +33,12 @@ The deep learning model, `ConvolutionalAutoEncoder1D`, is built with PyTorch and
 ## 📜 Results
 
 ### Training Setup
-The model was trained on a subset of the prokaryotic DNA corpus <b>AeCa, HaHi, WaMe, EsCo</b> with the following training setup:
+The model was trained on a subset of the prokaryotic DNA corpus <b>AeCa, HaHi, EsCo</b> with the following training setup:
 
 - **Dataset:** Prokaryotic genomes from DNACorpus 
-- **Parameters:** `P=1, K=1280`
+- **Parameters:** `P=4, K=1280`
 - **Loss function:** MSE loss
-- **Iterations:** `10000 training and 200 eval iterations`
+- **Iterations:** `20000 training and 200 eval iterations`
 - **Optimizer:** NAdam
 - **Hardware:** GPU-accelerated (NVIDIA Tesla T4 x 2, 16 GB GDDR6), 30 GB RAM, Intel Xeon 2-2.20 GHz [Kaggle]
 - **Evaluation metrics:** Base-level reconstruction accuracy, compression ratio
@@ -55,21 +55,18 @@ The overall compression ratio `(total compressed size / original size)` is detai
 
 | file | Original Size (bytes) | Compressed Size (bytes) | Compression Ratio |
 |:-----|----------------------:|------------------------:|------------------:|
-| AeCa |               1591049 |                 579831 |          0.364433 |
-| EsCo |               4641652 |                1670308 |          0.359852 |
-| HaHi |               3890005 |                1390251 |          0.357391 |
-| WaMe |               9144432 |                3313535 |          0.362355 |
+| AeCa |               1591049 |                  537023 |            2.9627 |
+| HaHi |               3890005 |                 1284873 |            3.0275 |
+| EsCo |               4641652 |                 1477598 |            3.1413 |
 
 #### Test Set Results
 
 | file | Original Size (bytes) | Compressed Size (bytes) | Compression Ratio |
 |:-----|----------------------:|------------------------:|------------------:|
-| AgPh |                 43970 |                  17314 |          0.393768 |
-| BuEb |                 18940 |                   7719 |          0.407550 |
-| HePy |               1667825 |                 603626 |          0.361924 |
-| YeMi |                 73689 |                  27493 |          0.373095 |
-
-
+| HePy |               1667825 |                  536913 |            3.1063 |
+| YeMi |                 73689 |                   23616 |            3.1203 |
+| BuEb |                 18940 |                    6351 |            2.9822 |
+| AgPh |                 43970 |                   14235 |            3.0888 |
 
 ![Sizes](https://github.com/EmberTSeal/SeqCoder/blob/main/Images/compress_vs_orig_sizes.png)
 
@@ -99,13 +96,12 @@ The entire workflow, from data preprocessing and model training to compression a
 *   PyTorch
 *   NumPy
 *   Pandas
-*   Blosc
 *   Zstandard
-*   Matplotlib / Seaborn (for visualization)
+*   Matplotlib 
 
 You can install the required packages using pip:
 ```bash
-pip install torch numpy pandas blosc zstandard matplotlib seaborn
+pip install torch numpy pandas zstandard matplotlib
 ```
 
 ### Running the Notebook
