@@ -22,6 +22,8 @@ The compression process is a two-stage pipeline designed for lossless reconstruc
 
 The final compressed file consists of the compressed latent representation from Stage 1 and the compressed residuals from Stage 2. During decompression, the autoencoder first generates the approximate sequence, which is then corrected using the residual data to achieve a bit-for-bit identical, lossless reconstruction of the original genome.
 
+![Pipeline](Images/COMP_DECOMP_PIPELINE_FINAL.png)
+
 ## 📡 Model Architecture
 
 The deep learning model, `ConvolutionalAutoEncoder1D`, is built with PyTorch and consists of:
@@ -29,6 +31,8 @@ The deep learning model, `ConvolutionalAutoEncoder1D`, is built with PyTorch and
 *   **Encoder**: A series of 1D convolutional layers with `ReLU` activation and batch normalization that progressively downsample the input sequence chunks into a latent space.
 *   **Self-Attention Bottleneck**: A self-attention block (`_SelfAttnBlock1D`) is applied to the latent representation. This allows the model to capture long-range dependencies and complex patterns within the DNA sequence.
 *   **Decoder**: A series of 1D transposed convolutional layers that upsample the latent representation back to the original sequence length. The decoder also incorporates self-attention blocks to refine the reconstruction.
+
+![Architecture](Images/ARCH_FINAL.png)
 
 ## 📜 Results
 
@@ -43,7 +47,7 @@ The model was trained on a subset of the prokaryotic DNA corpus <b>AeCa, HaHi, E
 - **Hardware:** GPU-accelerated (NVIDIA Tesla T4 x 2, 16 GB GDDR6), 30 GB RAM, Intel Xeon 2-2.20 GHz [Kaggle]
 - **Evaluation metrics:** Base-level reconstruction accuracy, compression ratio
 
-The trained model can be found [here](SeqCoder_p3_model.pth).
+The trained model can be found [here](FP16_SeqCoder_P4_20K.pth).
 
 ### Compression Ratio
 
@@ -68,27 +72,27 @@ The overall compression ratio `(total compressed size / original size)` is detai
 | BuEb |                 18940 |                    6351 |            2.9822 |
 | AgPh |                 43970 |                   14235 |            3.0888 |
 
-![Sizes](https://github.com/EmberTSeal/SeqCoder/blob/main/Images/compress_vs_orig_sizes.png)
+![Sizes](Results/size.png)
 
 ### 📈 Compression & Decompression Time
 
-![Testing Time](https://github.com/EmberTSeal/SeqCoder/blob/main/Images/testing_times.png)
+![Testing Time](Results/time.png)
 
 ### 📊 Loss-Accuracy Curves
 
 #### Loss
 
-![Loss Graphs](https://github.com/EmberTSeal/SeqCoder/blob/main/Images/training_loss_graphs.png)
+![Loss Graphs](Results/loss.png)
 
 #### Accuracy
 
-![Loss Graphs](https://github.com/EmberTSeal/SeqCoder/blob/main/Images/training_accuracy_graphs.png)
+![Accuracy Graphs](Results/accr.png)
 
 
 
 ## 📦 Usage
 
-The entire workflow, from data preprocessing and model training to compression and evaluation, is contained within the `SeqCoder_Inter.ipynb` Jupyter Notebook.
+The entire workflow, from data preprocessing and model training to compression and evaluation, is contained within the `SeqCoder.ipynb` Jupyter Notebook.
 
 ### Prerequisites
 
@@ -112,7 +116,7 @@ pip install torch numpy pandas zstandard matplotlib
     cd SeqCoder
     ```
 2.  **Dataset:** The notebook is configured to use the [DNACorpus](?) dataset. You will need to download the prokaryotic genome files and place them in a directory structure that matches the paths in the notebook (e.g., `/kaggle/input/dnacorpus/DNACorpus/Prokaryotic`). You may need to adjust the file paths in the notebook for local execution.
-3.  **Execute the notebook:** Open and run the cells in `SeqCoder_Inter.ipynb` using Jupyter Lab or Jupyter Notebook. The notebook will:
+3.  **Execute the notebook:** Open and run the cells in `SeqCoder.ipynb` using Jupyter Lab or Jupyter Notebook. The notebook will:
     *   Train the autoencoder model (Optional).
     *   Compress each file in the dataset.
     *   Generate evaluation results, including compression ratios and accuracy checks.
